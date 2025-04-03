@@ -9,4 +9,4 @@ sudo apt update && sudo apt install -y python3 python3-venv python3-pip curl scr
 sleep 3
 rm -rf rl-swarm && git clone https://github.com/zunxbt/rl-swarm.git 
 sleep 3
-cd rl-swarm
+cd /root/rl-swarm/
