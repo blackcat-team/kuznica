@@ -8,7 +8,7 @@ green() {
 }
 # цветной терминал
 source <(curl -s https://raw.githubusercontent.com/nodejumper-org/cosmos-scripts/master/utils/enable_colorful_bash.sh)
-green  "Начинаю установку ноды"
+green  "Начинаю установку ноды BITZ"
 green  "Обновляю пакеты, пожалуйста подождите....."
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/main%20install) &>/dev/null
 green  "Обновление успешно завершено."
