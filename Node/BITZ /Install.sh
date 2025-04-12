@@ -6,14 +6,12 @@ echo "*******************************************************"
 green() {
     echo -e "\e[32m$1\e[0m"
 }
-# цветной терминал
-source <(curl -s https://raw.githubusercontent.com/nodejumper-org/cosmos-scripts/master/utils/enable_colorful_bash.sh)
 green  "Начинаю установку ноды BITZ"
 green  "Обновляю пакеты, пожалуйста подождите....."
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/main%20install) &>/dev/null
 green  "Обновление успешно завершено."
 green  "Устанавливаю Rust, пожалуйста, подождите..."
-bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Install_Rust.sh) &>/dev/null
+source $HOME/.cargo/env
 green "Rust установлен, продалжаю установку ноды"
 sudo apt install -y build-essential pkg-config libssl-dev clang
 green  "Устанавливаем Solana CLI..."
