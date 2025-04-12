@@ -10,7 +10,7 @@ green  "Устанавливаем необходимое ПО"
 green  "Обновляю пакеты, пожалуйста подождите....."
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/main%20install) &>/dev/null
 green  "Обновление успешно завершено."
-green  "Устанавливаю Docker, пожалуйста, подождите..."
+green  "Устанавливаю Rust, пожалуйста, подождите..."
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Install_Rust.sh) &>/dev/null
 green  "Необходимое ПО установлено, продолжаем установку ноды"
 sudo apt install -y build-essential pkg-config libssl-dev clang
