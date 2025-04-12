@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-curl https://sh.rustup.rs -sSf | sh -s -- -y
+rustup install 1.80.0
 source "$HOME/.cargo/env"
 rustup update
 sleep 2
