@@ -31,5 +31,6 @@ green "Ваш приватный ключ:"
 cat ~/.config/solana/id.json
 green  "!!!Обязательно СОХРАНИТЕ приватный ключ к себе на компьютер!!!"
 sleep 20
+green "Продолжаем установку ноды"
 cargo install bitz
 solana config set --url https://mainnetbeta-rpc.eclipse.xyz/
