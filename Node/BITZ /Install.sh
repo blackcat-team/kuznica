@@ -13,6 +13,8 @@ green  "Обновление успешно завершено."
 sudo apt install -y build-essential pkg-config libssl-dev clang
 green  "Устанавливаю Rust, пожалуйста, подождите..."
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Install_Rust.sh)
+sleep 2
+source "$HOME/.cargo/env"
 green "Rust установлен, продалжаю установку ноды"
 green  "Устанавливаем Solana CLI..."
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Install_Solana_CLI) &>/dev/null
