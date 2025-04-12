@@ -18,8 +18,11 @@ green "Rust установлен, продалжаю установку ноды
 sudo apt install -y build-essential pkg-config libssl-dev clang
 green  "Устанавливаем Solana CLI..."
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Install_Solana_CLI) &>/dev/null
-sleep 1
 green "CLI установлен, продолжаем установку ноды"
+sleep 2
+export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+sleep 2
+echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.bashrc
 solana-keygen new --no-passphrase
 sleep 5
 green "Начинаю генерацию приватного ключа..."
