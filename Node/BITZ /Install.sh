@@ -10,10 +10,10 @@ green  "Начинаю установку ноды BITZ"
 green  "Обновляю пакеты, пожалуйста подождите....."
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/main%20install) &>/dev/null
 green  "Обновление успешно завершено."
-green  "Устанавливаю Rust, пожалуйста, подождите..."
-source $HOME/.cargo/env
-green "Rust установлен, продалжаю установку ноды"
 sudo apt install -y build-essential pkg-config libssl-dev clang
+green  "Устанавливаю Rust, пожалуйста, подождите..."
+bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Install_Rust.sh)
+green "Rust установлен, продалжаю установку ноды"
 green  "Устанавливаем Solana CLI..."
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Install_Solana_CLI) &>/dev/null
 green "CLI установлен, продолжаем установку ноды"
@@ -32,3 +32,4 @@ sleep 20
 green "Продолжаем установку ноды"
 cargo install bitz
 solana config set --url https://mainnetbeta-rpc.eclipse.xyz/
+green "Установка ноды завершена, для продолжения выполните команду: solana address"
