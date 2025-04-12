@@ -1,14 +1,36 @@
 #!/bin/bash
 sh -c "$(curl -sSfL https://release.solana.com/v1.18.2/install)"
 sleep 2
-# Добавляем Solana в PATH
-export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+#!/bin/bash
 
-# Проверяем, есть ли уже такая строка в .bashrc
-if ! grep -Fxq 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' ~/.bashrc
-then
-    echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.bashrc
-    echo "Solana PATH добавлен в .bashrc"
+SOLANA_BIN="$HOME/.local/share/solana/install/active_release/bin"
+EXPORT_LINE="export PATH=\"$SOLANA_BIN:\$PATH\""
+
+# Экспортируем для текущей сессии (если скрипт sourced — подействует)
+export PATH="$SOLANA_BIN:$PATH"
+
+# Добавляем в .bashrc, если ещё не добавлено
+if ! grep -Fxq "$EXPORT_LINE" ~/.bashrc; then
+    echo "$EXPORT_LINE" >> ~/.bashrc
+    echo "Добавлено в .bashrc"
 else
-    echo "Solana PATH уже есть в .bashrc"
+    echo "Уже есть в .bashrc"
 fi
+
+# Определяем оболочку
+CURRENT_SHELL=$(basename "$SHELL")
+
+# Подгружаем .bashrc, если в bash
+if [ "$CURRENT_SHELL" = "bash" ]; then
+    echo "Подгружаем ~/.bashrc..."
+    source ~/.bashrc
+    echo "PATH обновлён в текущей сессии (bash)"
+else
+    echo "Ты используешь $CURRENT_SHELL. Обнови конфигурацию вручную, если нужно:"
+    echo "    source ~/.bashrc"
+fi
+
+# Проверка
+echo ""
+echo "Проверка:"
+which solana || echo " Команда 'solana' пока не найдена. Возможно, нужно перезапустить терминал."
