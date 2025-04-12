@@ -6,6 +6,8 @@ echo "*******************************************************"
 green() {
     echo -e "\e[32m$1\e[0m"
 }
+# цветной терминал
+source <(curl -s https://raw.githubusercontent.com/nodejumper-org/cosmos-scripts/master/utils/enable_colorful_bash.sh)
 green  "Начинаю установку ноды"
 green  "Обновляю пакеты, пожалуйста подождите....."
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/main%20install) &>/dev/null
