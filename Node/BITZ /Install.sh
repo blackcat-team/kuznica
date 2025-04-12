@@ -14,11 +14,9 @@ green  "Устанавливаю Rust, пожалуйста, подождите.
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Install_Rust.sh) &>/dev/null
 green  "Необходимое ПО установлено, продолжаем установку ноды"
 sudo apt install -y build-essential pkg-config libssl-dev clang
-sh -c "$(curl -sSfL https://release.solana.com/v1.18.2/install)"
-sleep 3
-export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+green  "Устанавливаем Solana CLI"
+bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Install_Solana_CLI) &>/dev/null
 sleep 1
-green  'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.bashrc
 solana-keygen new --no-passphrase
 sleep 5
 green  "!!!Обязательно СОХРАНИТЕ seed фразу выше к себе на компьютер!!!"
