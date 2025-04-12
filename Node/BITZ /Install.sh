@@ -17,6 +17,10 @@ sudo apt install -y build-essential pkg-config libssl-dev clang
 green  "Устанавливаем Solana CLI"
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Install_Solana_CLI) &>/dev/null
 sleep 1
+export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+sleep 1
+echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.bashrc
+sleep 1
 solana-keygen new --no-passphrase
 sleep 5
 green  "!!!Обязательно СОХРАНИТЕ seed фразу выше к себе на компьютер!!!"
