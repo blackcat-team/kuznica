@@ -8,14 +8,16 @@ request_param() {
     read -p "$1: " param
     echo $param
 }
-
+# Зеленый цвет сервисных сообщений echo
+green() {
+    echo -e "\e[32m$1\e[0m"
 # Запрашиваем параметры у пользователя
-echo "Введите необходимые переменные для ноды:"
+green "Введите необходимые переменные для ноды:"
 PRIVATE_KEY=$(request_param "Введите ваш private key (должен начинаться с 0x)")
 RPC_URL=$(request_param "Введите BASE RPC URL (в формате HTTPS)")
 
 if [[ "$PRIVATE_KEY" == 0x* ]]; then
-    echo "Private key введен верно"
+    green "Private key введен верно"
 else
     echo "Private key введен не верно, должен начинаться с 0х"
     exit 1
@@ -23,7 +25,7 @@ fi
 REGISTRY_ADDRESS=0x3B1554f346DFe5c482Bb4BA31b880c1C18412170
 IMAGE="ritualnetwork/infernet-node:1.4.0"
 
-echo "Продолжаем установку ноды"
+green "Начинаем переустановку ноды, подождите..."
 
 # Клонирование репозитория (шаг 5 оф. гайда)
 cd $HOME
@@ -73,4 +75,4 @@ docker-compose up --remove-orphans -d
 
 docker rm -fv infernet-anvil  &>/dev/null
 
-echo "Установка ноды успешно завершена"
+green "Переустановка ноды успешно завершена, проверить логи ноды:  docker logs infernet-node -f --tail 100"
