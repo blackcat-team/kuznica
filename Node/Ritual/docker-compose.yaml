@@ -26,7 +26,7 @@ services:
     networks:
       - network
     volumes:
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
       - redis-data:/data
     restart:
       always
@@ -38,7 +38,7 @@ services:
     environment:
       - FLUENTBIT_CONFIG_PATH=/fluent-bit/etc/fluent-bit.conf
     volumes:
-      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
       - /var/log:/var/log:ro
     networks:
       - network
