@@ -3,6 +3,8 @@ echo "*******************************************************"
 curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/kuznica_logo.sh | bash
 echo "*******************************************************"
 rm -r infernet-container-starter
+docker stop infernet-node
+docker rm infernet-node
 # Запрашиваемые парамеры
 request_param() {
     read -p "$1: " param
@@ -23,13 +25,7 @@ fi
 REGISTRY_ADDRESS=0x3B1554f346DFe5c482Bb4BA31b880c1C18412170
 IMAGE="ritualnetwork/infernet-node:1.4.0"
 
-echo "Устанавливаем необходимое ПО"
-echo "Обновляю пакеты, пожалуйста подождите....."
-bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/main%20install) &>/dev/null
-echo "Обновление успешно завершено."
-echo "Устанавливаю Docker, пожалуйста, подождите..."
-bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/docker%20install) &>/dev/null
-echo "Необходимое ПО установлено, продолжаем установку ноды"
+echo "Продолжаем установку ноды"
 
 # Клонирование репозитория (шаг 5 оф. гайда)
 cd $HOME
@@ -73,4 +69,4 @@ docker-compose up --remove-orphans -d
 
 docker rm -fv infernet-anvil  &>/dev/null
 
-echo "Установка ноды успешно завершена, Red благодарит вас за использование скрипта и желает словить Lifechange"
+echo "Установка ноды успешно завершена"
