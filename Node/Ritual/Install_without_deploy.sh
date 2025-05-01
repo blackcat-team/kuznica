@@ -3,8 +3,6 @@ echo "*******************************************************"
 curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/kuznica_logo.sh | bash
 echo "*******************************************************"
 rm -r infernet-container-starter
-docker stop infernet-node
-docker rm infernet-node
 # Запрашиваемые парамеры
 request_param() {
     read -p "$1: " param
@@ -64,6 +62,10 @@ sed -i 's|container_name: infernet-anvil|container_name: infernet-anvil\n    res
 sudo rm -rf docker-compose.yaml
 
 wget https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Node/Ritual/docker-compose.yaml
+
+docker stop infernet-node
+
+docker rm infernet-node
 
 docker-compose up --remove-orphans -d
 
