@@ -47,7 +47,7 @@ sed -i 's|"registry_address": "[^"]*"|"registry_address": "'"$REGISTRY_ADDRESS"'
 sed -i 's|"sleep": 3|"sleep": 5|' "$DEPLOY"
 sed -i 's|"forward_stats": true|"forward_stats": false|' "$DEPLOY"
 sed -i 's|"batch_size": 100|"batch_size": 1800|' "$DEPLOY"
-sed -i 's|"starting_sub_id": 0|"starting_sub_id": 234520|' "$DEPLOY"
+sed -i 's|"starting_sub_id": 0|"starting_sub_id": 247300|' "$DEPLOY"
 #container/config.json
 CONTAINER=$HOME/infernet-container-starter/projects/hello-world/container/config.json
 
@@ -57,7 +57,7 @@ sed -i 's|"registry_address": "[^"]*"|"registry_address": "'"$REGISTRY_ADDRESS"'
 sed -i 's|"sleep": 3|"sleep": 5|' "$CONTAINER"
 sed -i 's|"forward_stats": true|"forward_stats": false|' "$CONTAINER"
 sed -i 's|"batch_size": 100|"batch_size": 1800|' "$CONTAINER"
-sed -i 's|"starting_sub_id": 0|"starting_sub_id": 234520|' "$CONTAINER"
+sed -i 's|"starting_sub_id": 0|"starting_sub_id": 247300|' "$CONTAINER"
 
 #Инициализируем новую конфигурацию
 sed -i 's|ritualnetwork/infernet-node:.*|ritualnetwork/infernet-node:1.4.0|' $HOME/infernet-container-starter/deploy/docker-compose.yaml
@@ -65,12 +65,8 @@ sed -i 's|0.0.0.0:4000:4000|0.0.0.0:4321:4000|' $HOME/infernet-container-starter
 sed -i 's|8545:3000|8845:3000|' $HOME/infernet-container-starter/deploy/docker-compose.yaml
 sed -i 's|container_name: infernet-anvil|container_name: infernet-anvil\n    restart: on-failure|' $HOME/infernet-container-starter/deploy/docker-compose.yaml
 
-docker compose -f $HOME/infernet-container-starter/deploy/docker-compose.yaml up -d
-
-cd $HOME/infernet-container-starter/deploy
-docker compose down
-sleep 3
 sudo rm -rf docker-compose.yaml
+
 wget https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Node/Ritual/docker-compose.yaml
 
 docker-compose up --remove-orphans -d
