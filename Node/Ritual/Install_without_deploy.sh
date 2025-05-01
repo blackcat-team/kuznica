@@ -59,6 +59,8 @@ sed -i 's|0.0.0.0:4000:4000|0.0.0.0:4321:4000|' $HOME/infernet-container-starter
 sed -i 's|8545:3000|8845:3000|' $HOME/infernet-container-starter/deploy/docker-compose.yaml
 sed -i 's|container_name: infernet-anvil|container_name: infernet-anvil\n    restart: on-failure|' $HOME/infernet-container-starter/deploy/docker-compose.yaml
 
+docker compose -f $HOME/infernet-container-starter/deploy/docker-compose.yaml up -d
+
 cd $HOME/infernet-container-starter/deploy
 
 docker compose down
