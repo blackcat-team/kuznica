@@ -59,13 +59,13 @@ sed -i 's|0.0.0.0:4000:4000|0.0.0.0:4321:4000|' $HOME/infernet-container-starter
 sed -i 's|8545:3000|8845:3000|' $HOME/infernet-container-starter/deploy/docker-compose.yaml
 sed -i 's|container_name: infernet-anvil|container_name: infernet-anvil\n    restart: on-failure|' $HOME/infernet-container-starter/deploy/docker-compose.yaml
 
+cd $HOME/infernet-container-starter/deploy
+
+docker compose down
+
 sudo rm -rf docker-compose.yaml
 
 wget https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Node/Ritual/docker-compose.yaml
-
-docker stop infernet-node
-
-docker rm infernet-node
 
 docker-compose up --remove-orphans -d
 
