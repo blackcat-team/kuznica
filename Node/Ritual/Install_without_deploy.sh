@@ -6,7 +6,7 @@ rm -r infernet-container-starter
 # Запрашиваемые парамеры
 request_param() {
     read -p "$1: " param
-    green $param
+    echo $param
 }
 # Зеленый цвет сервисных сообщений echo
 green() {
