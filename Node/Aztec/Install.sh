@@ -80,7 +80,7 @@ read -p "$(cyan 'Введите адрес кошелька, приватный 
 
 green "Вносим данные в конфигурацию ноды..."
 
-cat > "$HOME/start_aztec_node.sh" << 'EOF'
+cat << 'EOF' > "$HOME/start_aztec_node.sh"
 #!/bin/bash
 export PATH=$PATH:$HOME/.aztec/bin
 
