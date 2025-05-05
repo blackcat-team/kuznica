@@ -72,7 +72,7 @@ if [ -z "$IP" ]; then
     red "Невозможно определить IP адрес автоматически"
     read -p "Пожалуйста введите IP адрес от вашего сервера: " IP
 fi
-read -p "$(cyan 'Введите ваш Sepolia Ethereum RPC URL: ') L1_RPC_URL
+read -p "$(cyan 'Введите ваш Sepolia Ethereum RPC URL: ')" L1_RPC_URL
 read -p "$(cyan 'Введите ваш Ethereum BEACON URL: ')" L1_CONSENSUS_URL
 read -p "$(cyan 'Введите ваш приватный ключ (с преффиксом 0x):')" VALIDATOR_PRIVATE_KEY
 read -p "$(cyan 'Введите адрес кошелька, приватный ключ от которого вы вводили выше: ')" ETH_ADDRESS
