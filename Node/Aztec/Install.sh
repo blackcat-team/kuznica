@@ -58,10 +58,10 @@ if ! command -v aztec &> /dev/null; then
   red "ОШИБКА: Установка не удалась. Пожалуйста, проверьте логи."
   exit 1
 fi
-green "UPDATING AZTEC TO ALPHA-TESTNET..."
+green "Обновляем AZTEC до ALPHA-TESTNET..."
 aztec-up alpha-testnet
 
-green "CONFIGURING NODE..."
+green "Приступаем к настройке ноды..."
 IP=$(curl -s https://api.ipify.org)
 if [ -z "$IP" ]; then
     IP=$(curl -s http://checkip.amazonaws.com)
@@ -70,19 +70,15 @@ if [ -z "$IP" ]; then
     IP=$(curl -s https://ifconfig.me)
 fi
 if [ -z "$IP" ]; then
-    red "Could not determine IP address automatically"
-    read -p "Please enter your VPS/WSL IP address: " IP
+    red "Невозможно определить IP адрес автоматически"
+    read -p "Пожалуйста введите IP адрес от вашего сервера: " IP
 fi
+read -p "$(cyan 'Введите ваш Sepolia Ethereum RPC URL: ') L1_RPC_URL
+read -p "$(cyan 'Введите ваш Ethereum BEACON URL: ')" L1_CONSENSUS_URL
+read -p "$(cyan 'Введите ваш приватный ключ (с преффиксом 0x):')" VALIDATOR_PRIVATE_KEY
+read -p "$(cyan 'Введите адрес кошелька, приватный ключ от которого вы вводили выше: ')" ETH_ADDRESS
 
-read -p "Enter Your Sepolia Ethereum RPC URL: " L1_RPC_URL
-
-read -p "Enter Your Sepolia Ethereum BEACON URL: " L1_CONSENSUS_URL
-
-green "Please create a new EVM wallet, fund it with Sepolia Faucet and then provide the private key"
-read -p "Enter your new evm wallet private key (with 0x prefix): " VALIDATOR_PRIVATE_KEY
-read -p "Enter the wallet address associated with the private key you just provided: " ETH_ADDRESS
-
-green "STARTING AZTEC NODE"
+green "Вносим данные в конфигурацию ноды..."
 cat > $HOME/start_aztec_node.sh << EOL
 #!/bin/bash
 export PATH=\$PATH:\$HOME/.aztec/bin
@@ -97,12 +93,13 @@ aztec start --node --archiver --sequencer \\
   --p2p.maxTxPoolSize 1000000000
 EOL
 chmod +x $HOME/start_aztec_node.sh
-green "Создаем сервис...."
+green "установка и настройка завершены, приступаем к запуску..."
+green "Создаем сервис Aztec...."
 cd /etc/systemd/system/
 wget https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Node/Aztec/aztec-node.service
 sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
 sudo systemctl enable aztec-node.service
-green "Запускаем сервис"
+green "Запускаем ноду Aztec..."
 sudo systemctl start aztec-node.service
 green "Нода успешно установлена, можете проверить логи командой 'journalctl -u aztec-node.service -f' Red желает вам удачи!"
