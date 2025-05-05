@@ -12,7 +12,6 @@ cyan() {
 red() {
     echo -e "\e[31m$1\e[0m"
 }
-green "Устанавливаем необходимое ПО"
 green "Обновляю пакеты, устанавливаю необходимое ПО, пожалуйста подождите....."
 bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/main%20install) &>/dev/null
 sudo apt-get install -y curl screen net-tools psmisc jq
