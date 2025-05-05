@@ -79,27 +79,34 @@ read -p "$(cyan 'Введите ваш приватный ключ (с преф�
 read -p "$(cyan 'Введите адрес кошелька, приватный ключ от которого вы вводили выше: ')" ETH_ADDRESS
 
 green "Вносим данные в конфигурацию ноды..."
-cat > $HOME/start_aztec_node.sh << EOF
+
+cat > "$HOME/start_aztec_node.sh" << 'EOF'
 #!/bin/bash
-export PATH=\$PATH:\$HOME/.aztec/bin
-aztec start --node --archiver --sequencer \\
-  --network alpha-testnet \\
-  --port 8080 \\
-  --l1-rpc-urls \$L1_RPC_URL \\
-  --l1-consensus-host-urls \$L1_CONSENSUS_URL \\
-  --sequencer.validatorPrivateKey \$VALIDATOR_PRIVATE_KEY \\
-  --sequencer.coinbase \$ETH_ADDRESS \\
-  --p2p.p2pIp \$IP \\
+export PATH=$PATH:$HOME/.aztec/bin
+
+aztec start --node --archiver --sequencer \
+  --network alpha-testnet \
+  --port 8080 \
+  --l1-rpc-urls "$L1_RPC_URL" \
+  --l1-consensus-host-urls "$L1_CONSENSUS_URL" \
+  --sequencer.validatorPrivateKey "$VALIDATOR_PRIVATE_KEY" \
+  --sequencer.coinbase "$ETH_ADDRESS" \
+  --p2p.p2pIp "$IP" \
   --p2p.maxTxPoolSize 1000000000
 EOF
-chmod +x $HOME/start_aztec_node.sh
-green "установка и настройка завершены, приступаем к запуску..."
+
+chmod +x "$HOME/start_aztec_node.sh"
+
+green "Установка и настройка завершены, приступаем к запуску..."
 green "Создаем сервис Aztec...."
+
 cd /etc/systemd/system/
 wget https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Node/Aztec/aztec-node.service
+
 sudo systemctl daemon-reexec
 sudo systemctl daemon-reload
 sudo systemctl enable aztec-node.service
+
 green "Запускаем ноду Aztec..."
 sudo systemctl start aztec-node.service
 green "Нода успешно установлена, можете проверить логи командой 'journalctl -u aztec-node.service -f' Red желает вам удачи!"
