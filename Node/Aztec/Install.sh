@@ -79,7 +79,7 @@ read -p "$(cyan 'Введите ваш приватный ключ (с преф�
 read -p "$(cyan 'Введите адрес кошелька, приватный ключ от которого вы вводили выше: ')" ETH_ADDRESS
 
 green "Вносим данные в конфигурацию ноды..."
-cat > $HOME/start_aztec_node.sh << EOL
+cat > $HOME/start_aztec_node.sh << EOF
 #!/bin/bash
 export PATH=\$PATH:\$HOME/.aztec/bin
 aztec start --node --archiver --sequencer \\
@@ -91,7 +91,7 @@ aztec start --node --archiver --sequencer \\
   --sequencer.coinbase $ETH_ADDRESS \\
   --p2p.p2pIp $IP \\
   --p2p.maxTxPoolSize 1000000000
-EOL
+EOF
 chmod +x $HOME/start_aztec_node.sh
 green "установка и настройка завершены, приступаем к запуску..."
 green "Создаем сервис Aztec...."
