@@ -79,19 +79,19 @@ read -p "$(cyan 'Введите адрес кошелька, приватный 
 
 green "Вносим данные в конфигурацию ноды..."
 
-cat > $HOME/start_aztec_node.sh << EOF
+cat > $HOME/start_aztec_node.sh << EOL
 #!/bin/bash
 export PATH=\$PATH:\$HOME/.aztec/bin
 aztec start --node --archiver --sequencer \\
   --network alpha-testnet \\
   --port 8080 \\
-  --l1-rpc-urls \$L1_RPC_URL \\
-  --l1-consensus-host-urls \$L1_CONSENSUS_URL \\
-  --sequencer.validatorPrivateKey \$VALIDATOR_PRIVATE_KEY \\
-  --sequencer.coinbase \$ETH_ADDRESS \\
-  --p2p.p2pIp \$IP \\
+  --l1-rpc-urls $L1_RPC_URL \\
+  --l1-consensus-host-urls $L1_CONSENSUS_URL \\
+  --sequencer.validatorPrivateKey $VALIDATOR_PRIVATE_KEY \\
+  --sequencer.coinbase $COINBASE_ADDRESS \\
+  --p2p.p2pIp $IP \\
   --p2p.maxTxPoolSize 1000000000
-EOF
+EOL
 
 chmod +x "$HOME/start_aztec_node.sh"
 
