@@ -88,7 +88,7 @@ aztec start --node --archiver --sequencer \\
   --l1-rpc-urls $L1_RPC_URL \\
   --l1-consensus-host-urls $L1_CONSENSUS_URL \\
   --sequencer.validatorPrivateKey $VALIDATOR_PRIVATE_KEY \\
-  --sequencer.coinbase $COINBASE_ADDRESS \\
+  --sequencer.coinbase $ETH_ADDRESS \\
   --p2p.p2pIp $IP \\
   --p2p.maxTxPoolSize 1000000000
 EOL
