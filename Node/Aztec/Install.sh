@@ -85,11 +85,11 @@ export PATH=\$PATH:\$HOME/.aztec/bin
 aztec start --node --archiver --sequencer \\
   --network alpha-testnet \\
   --port 8080 \\
-  --l1-rpc-urls $L1_RPC_URL \\
-  --l1-consensus-host-urls $L1_CONSENSUS_URL \\
-  --sequencer.validatorPrivateKey $VALIDATOR_PRIVATE_KEY \\
-  --sequencer.coinbase $ETH_ADDRESS \\
-  --p2p.p2pIp $IP \\
+  --l1-rpc-urls \$L1_RPC_URL \\
+  --l1-consensus-host-urls \$L1_CONSENSUS_URL \\
+  --sequencer.validatorPrivateKey \$VALIDATOR_PRIVATE_KEY \\
+  --sequencer.coinbase \$ETH_ADDRESS \\
+  --p2p.p2pIp \$IP \\
   --p2p.maxTxPoolSize 1000000000
 EOF
 chmod +x $HOME/start_aztec_node.sh
