@@ -96,7 +96,7 @@ aztec start --node --archiver --sequencer \\
   --p2p.p2pIp $IP \\
   --p2p.maxTxPoolSize 1000000000
 EOL
-
+chmod +x $HOME/start_aztec_node.sh
 green "Создаем сервис...."
 cd /etc/systemd/system/
 wget https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Node/Aztec/aztec-node.service
