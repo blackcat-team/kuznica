@@ -1,0 +1,29 @@
+#!/bin/bash
+cyan() {
+    echo -e "\e[36m$1\e[0m"
+}
+green() {
+    echo -e "\e[32m$1\e[0m"
+}
+# Путь к файлу
+NODE_SCRIPT="/root/start_aztec_node.sh"
+
+# Запрашиваем у пользователя данные
+read -p "$(cyan 'Введите ваш приватный ключ (с преффиксом 0x):')" PRIVATE_KEY
+read -p "$(cyan 'Введите адрес кошелька, приватный ключ от которого вы вводили выше: ')" WALLET_ADDRESS
+
+# Проверка наличия файла
+if [ ! -f "$NODE_SCRIPT" ]; then
+  echo "Файл $NODE_SCRIPT не найден!"
+  exit 1
+fi
+
+# Обновляем приватный ключ
+sed -i "s/--sequencer.validatorPrivateKey 0x[a-fA-F0-9]\+/--sequencer.validatorPrivateKey $PRIVATE_KEY/" "$NODE_SCRIPT"
+
+# Обновляем адрес кошелька
+sed -i "s/--sequencer.coinbase 0x[a-fA-F0-9]\+/--sequencer.coinbase $WALLET_ADDRESS/" "$NODE_SCRIPT"
+
+green "Данные успешно обновлены, перезапускаю ноду..."
+sudo systemctl restart aztec-node.service
+green "Нода успешно перезапущено, можете проверить логи командой 'journalctl -u aztec-node.service -f' Red желает вам удачи!"
