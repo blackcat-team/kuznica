@@ -5,11 +5,11 @@ Requires=docker.service
 
 [Service]
 User=root
-WorkingDirectory=/home/root
-ExecStart=/home/root/start_aztec_node.sh
+WorkingDirectory=/root
+ExecStart=/root/start_aztec_node.sh
 Restart=always
 RestartSec=10
-Environment=PATH=/usr/bin:/bin:/usr/local/bin:/home/root/.aztec/bin
+Environment=PATH=/usr/bin:/bin:/usr/local/bin:/root/.aztec/bin
 
 [Install]
 WantedBy=multi-user.target
