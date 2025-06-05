@@ -58,7 +58,7 @@ if ! command -v aztec &> /dev/null; then
   exit 1
 fi
 green "Обновляем AZTEC до ALPHA-TESTNET..."
-aztec-up -v 0.87.6
+aztec-up latest
 
 green "Приступаем к настройке ноды..."
 IP=$(curl -s https://api.ipify.org)
