@@ -32,7 +32,7 @@ bash <(curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/head
 sleep 2
 green "Устанавливаем ноду...."
 # клонируем ноду
-curl -L https://github.com/cysic-labs/phase2_libs/releases/download/v1.0.0/setup_linux.sh > ~/setup_linux.sh && bash ~/setup_linux.sh $WALLET_ADDRESS
+curl -L https://github.com/cysic-labs/cysic-phase3/releases/download/v1.0.0/setup_linux.sh > ~/setup_linux.sh && bash ~/setup_linux.sh $WALLET_ADDRESS
 #создаем сервисный файл
 green "Создаем сервис...."
 cd /etc/systemd/system/
