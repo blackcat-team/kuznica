@@ -4,6 +4,7 @@ curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/
 echo "*******************************************************"
 green() {
     echo -e "\e[32m$1\e[0m"
+}
 green "Клонируем проект с Github"
 git clone https://github.com/boundless-xyz/boundless
 cd boundless
