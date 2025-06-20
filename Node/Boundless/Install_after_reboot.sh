@@ -36,7 +36,7 @@ touch "$ENV_FILE"
 # Добавление переменных
 echo "export PRIVATE_KEY=\"$PRIVATE_KEY\"" >> "$ENV_FILE"
 echo "export RPC_URL=\"https://mainnet.base.org\"" >> "$ENV_FILE"
-echo "✅ Переменные успешно добавлены в $ENV_FILE"
+echo "Переменные успешно добавлены в $ENV_FILE"
 source .env.base
 just bento
 green "Все готово для проведения транзакций"
