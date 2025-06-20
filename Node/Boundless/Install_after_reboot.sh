@@ -30,7 +30,7 @@ cd /root/boundless/
 # Запрос приватного ключа
 read -p "Введите свой приватный ключ: " PRIVATE_KEY
 # Путь к файлу
-ENV_FILE="/root/boundless/env.base"
+ENV_FILE="/root/boundless/.env.base"
 # Создание файла, если не существует
 touch "$ENV_FILE"
 # Добавление переменных
