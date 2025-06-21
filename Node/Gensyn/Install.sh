@@ -21,7 +21,7 @@ sudo n lts
 n 20.18.0
 
 CONFIG_PATH="/root/rl-swarm/hivemind_exp/configs/gpu/grpo-qwen-2.5-1.5b-deepseek-r1.yaml"
-REMOTE_URL="https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/Node/Gensyn/grpo-qwen-2.5-1.5b-deepseek-r1.yaml"
+REMOTE_URL="https://raw.githubusercontent.com/blackcat-team/kuznica/main/Node/Gensyn/grpo-qwen-2.5-1.5b-deepseek-r1.yaml"
 
 echo "[INFO] Removing old config if it exists..."
 rm -f "$CONFIG_PATH"
