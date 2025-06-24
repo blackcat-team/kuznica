@@ -37,5 +37,8 @@ else
   exit 1
 fi
 TARGET_FILE="/root/rl-swarm/hivemind_exp/runner/grpo_runner.py"
-sed -i 's|dht = hivemind.DHT(start=True, startup_timeout=30, \(.*\))|dht = hivemind.DHT(start=True, startup_timeout=30, ensure_bootstrap_success=False, \1)|' "$TARGET_FILE"
+sed -i '/hivemind\.DHT/ {
+  s/ensure_bootstrap_success *= *True/ensure_bootstrap_success=False/
+  /ensure_bootstrap_success/! s|\(hivemind.DHT(start=True, startup_timeout=30, \)|\1ensure_bootstrap_success=False, |
+}' "$TARGET_FILE"
 ./run_rl_swarm.sh
