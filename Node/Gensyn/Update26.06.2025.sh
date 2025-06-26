@@ -6,6 +6,7 @@ echo "*******************************************************"
 
 npm install -g yarn --force
 yarn install
+sudo npm install encoding pino-pretty
 
 rm -rf rl-swarm
 git clone https://github.com/gensyn-ai/rl-swarm
