@@ -4,9 +4,6 @@ echo "*******************************************************"
 curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/main/kuznica_logo.sh | bash
 echo "*******************************************************"
 
-# Завершаем старую screen-сессию gensyn, если она запущена
-screen -S gensyn -X quit 2>/dev/null
-
 npm install -g yarn --force
 yarn install
 
