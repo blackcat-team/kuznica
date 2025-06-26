@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "*******************************************************"
-curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/kuznica_logo.sh | bash
+curl -sSL https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/kuznica_logo.sh | bash
 echo "*******************************************************"
 sleep 3
 curl -sSL https://raw.githubusercontent.com/zunxbt/installation/main/node.sh | bash
