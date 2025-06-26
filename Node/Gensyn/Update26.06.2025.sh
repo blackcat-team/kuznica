@@ -1,16 +1,22 @@
 #!/bin/bash
+
 echo "*******************************************************"
-curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/refs/heads/main/kuznica_logo.sh | bash
+curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/main/kuznica_logo.sh | bash
 echo "*******************************************************"
-pkill -f "SCREEN.*gensyn"
 
-screen -S gensyn
+# Убить старую screen-сессию, если есть
+screen -S gensyn -X quit 2>/dev/null
 
-npm install -g yarn --force
-yarn install
+# Создать новую screen-сессию в фоне
+screen -dmS gensyn bash -c '
+  npm install -g yarn --force
+  yarn install
 
-rm -rf rl-swarm
-git clone https://github.com/gensyn-ai/rl-swarm
+  rm -rf rl-swarm
+  git clone https://github.com/gensyn-ai/rl-swarm
 
-cd rl-swarm
-python3 -m venv .venv && source .venv/bin/activate && ./run_rl_swarm.sh
+  cd rl-swarm
+  python3 -m venv .venv && source .venv/bin/activate && ./run_rl_swarm.sh
+
+  exec bash
+'
