@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "*******************************************************"
-curl -s https://raw.githubusercontent.com/blackcat-team/kuznica/main/kuznica_logo.sh | bash
+curl -sSL https://raw.githubusercontent.com/blackcat-team/kuznica/main/kuznica_logo.sh | bash
 echo "*******************************************************"
 
 npm install -g yarn --force
