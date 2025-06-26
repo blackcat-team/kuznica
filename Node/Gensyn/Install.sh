@@ -18,6 +18,7 @@ pip install accelerate==1.7
 sudo apt install -y npm
 sudo npm install -g yarn
 sudo npm install -g n
+sudo npm install encoding pino-pretty
 sudo n lts
 n 20.18.0
 
