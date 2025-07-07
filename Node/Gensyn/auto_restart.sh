@@ -2,7 +2,7 @@
 
 SCRIPT="./run_rl_swarm.sh"
 TMP_LOG="/tmp/rlswarm_stdout.log"
-MAX_IDLE=600  # 10 минут в секундах
+MAX_IDLE=600  # 10 минут
 
 KEYWORDS=(
   "BlockingIOError"
@@ -17,39 +17,55 @@ KEYWORDS=(
   "requests.exceptions.ConnectionError"
 )
 
+P2P_ERROR_MSG="P2PDaemonError('Daemon failed to start in 15.0 seconds')"
+
 while true; do
-  echo "[$(date)] ?? Запуск Gensyn-ноды..."
+  echo "[$(date)] 🔧 Вносим правку в run_rl_swarm.sh..."
+  sed -i 's#rm -r \$ROOT_DIR/modal-login/temp-data/\*.json 2> /dev/null || true#\#rm -r $ROOT_DIR/modal-login/temp-data/*.json 2> /dev/null || true#' /root/rl-swarm/run_rl_swarm.sh
 
-  # Удалим старый лог
+  echo "[$(date)] 🚀 Запуск Gensyn-ноды..."
+
   rm -f "$TMP_LOG"
-
-  # Запускаем скрипт с автоответами на вопросы
   ( sleep 1 && printf "n\n\n\n" ) | bash "$SCRIPT" 2>&1 | tee "$TMP_LOG" &
   PID=$!
 
-  # Следим за логом и ошибками
   last_mod=$(date +%s)
   while kill -0 "$PID" 2>/dev/null; do
     sleep 5
 
-    # Проверяем обновление лога
     if [ -f "$TMP_LOG" ]; then
       current_mod=$(stat -c %Y "$TMP_LOG")
       now=$(date +%s)
       idle_time=$((now - current_mod))
 
       if (( idle_time > MAX_IDLE )); then
-        echo "[$(date)] ⚠️ Лог не обновлялся более $((MAX_IDLE/60)) минут. Перезапуск ноды..."
+        echo "[$(date)] ⚠️ Лог не обновлялся более $((MAX_IDLE/60)) минут. Перезапуск..."
         kill -9 "$PID" 2>/dev/null
         sleep 3
         break
       fi
     fi
 
-    # Проверяем ключевые ошибки
+    if grep -q "$P2P_ERROR_MSG" "$TMP_LOG"; then
+      echo "[$(date)] 🛠 Обнаружена ошибка P2P-демона. Ищем p2p_daemon.py для патча..."
+
+      DAEMON_FILE=$(find ~/rl-swarm/.venv -type f -path "*/site-packages/hivemind/p2p/p2p_daemon.py" 2>/dev/null | head -n 1)
+
+      if [[ -n "$DAEMON_FILE" ]]; then
+        echo "[$(date)] ✏️ Патчим файл: $DAEMON_FILE"
+        sed -i 's/startup_timeout: float = *15/startup_timeout: float = 120/' "$DAEMON_FILE"
+      else
+        echo "[$(date)] ❌ Не найден p2p_daemon.py. Проверь виртуальное окружение."
+      fi
+
+      kill -9 "$PID" 2>/dev/null
+      sleep 3
+      break
+    fi
+
     for ERR in "${KEYWORDS[@]}"; do
       if grep -q "$ERR" "$TMP_LOG"; then
-        echo "[$(date)] ? Найдено '$ERR'. Перезапуск..."
+        echo "[$(date)] ❌ Найдено '$ERR'. Перезапуск..."
         kill -9 "$PID" 2>/dev/null
         sleep 3
         break 2
@@ -57,6 +73,6 @@ while true; do
     done
   done
 
-  echo "[$(date)] ?? Процесс завершён. Перезапуск через 3 секунды..."
+  echo "[$(date)] 🔁 Процесс завершён. Перезапуск через 3 секунды..."
   sleep 3
 done
