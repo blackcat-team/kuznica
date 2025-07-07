@@ -22,4 +22,5 @@ sudo npm install encoding pino-pretty
 sudo n lts
 n 20.18.0
 wget https://raw.githubusercontent.com/blackcat-team/kuznica/main/Node/Gensyn/auto_restart.sh
+chmod +x auto_restart.sh
 ./auto_restart.sh
