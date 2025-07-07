@@ -1,7 +1,26 @@
 #!/bin/bash
 
+# 1) Подготовка "подменного" rm
+FAKEBIN="/root/rl-swarm/fakebin"
+mkdir -p "$FAKEBIN"
+
+cat > "$FAKEBIN/rm" << 'EOF'
+#!/bin/bash
+# Если rm вызывается именно для modal-login/temp-data/*.json — ничего не делаем
+if [[ "$1" == "-r" && "$2" == "$ROOT_DIR/modal-login/temp-data/"* ]]; then
+  exit 0
+else
+  # Иначе — настоящий rm
+  exec /bin/rm "$@"
+fi
+EOF
+
+chmod +x "$FAKEBIN/rm"
+# Добавляем в PATH вперед системного
+export PATH="$FAKEBIN:$PATH"
+
 SCRIPT="/root/rl-swarm/run_rl_swarm.sh"
-TMP_LOG="/tmp/rls­warm_stdout.log"
+TMP_LOG="/tmp/rlswarm_stdout.log"
 MAX_IDLE=600  # 10 минут
 
 KEYWORDS=(
@@ -20,39 +39,36 @@ KEYWORDS=(
 P2P_ERROR_MSG="P2PDaemonError('Daemon failed to start in 15.0 seconds')"
 
 while true; do
-  echo "[$(date)] 🔧 Отключаем удаление JSON (замена на пустышку)..."
-  # Заменяем строку rm ... на ":" — no-op, синтаксис остается целым
-  sed -i '/modal-login\/temp-data\/.*\.json/ s#.*#:#' "$SCRIPT"
-
-  echo "[$(date)] 🚀 Запускаем Gensyn-ноду..."
+  echo "[$(date)] 🚀 Запускаем Gensyn-ноду (rm подменён)..."
 
   rm -f "$TMP_LOG"
+  # Теперь внутри run_rl_swarm.sh все rm идут на нашу обёртку
   ( sleep 1 && printf "n\n\n\n" ) | bash "$SCRIPT" 2>&1 | tee "$TMP_LOG" &
   PID=$!
 
   while kill -0 "$PID" 2>/dev/null; do
     sleep 5
 
+    # Проверка залипания по логу
     if [ -f "$TMP_LOG" ]; then
       current_mod=$(stat -c %Y "$TMP_LOG")
       now=$(date +%s)
-      idle_time=$((now - current_mod))
-
-      if (( idle_time > MAX_IDLE )); then
-        echo "[$(date)] ⚠️ Лог не менялся $((MAX_IDLE/60)) мин. Перезапуск..."
+      if (( now - current_mod > MAX_IDLE )); then
+        echo "[$(date)] ⚠️ Лог не обновлялся более $((MAX_IDLE/60)) мин. Перезапуск..."
         kill -9 "$PID" 2>/dev/null
         sleep 3
         break
       fi
     fi
 
+    # Если P2PDaemonError — патчим timeout
     if grep -q "$P2P_ERROR_MSG" "$TMP_LOG"; then
       echo "[$(date)] 🛠 P2PDaemonError — патчим startup_timeout..."
 
-      DAEMON_FILE=$(find ~/rl-swarm/.venv -type f -path "*/site-packages/hivemind/p2p/p2p_daemon.py" 2>/dev/null | head -n1)
+      DAEMON_FILE=$(find ~/rl-swarm/.venv -type f -path "*/site-packages/hivemind/p2p/p2p_daemon.py" | head -n1)
       if [[ -n "$DAEMON_FILE" ]]; then
-        echo "[$(date)] ✏️ Патчим файл: $DAEMON_FILE"
         sed -i -E 's/(startup_timeout: *float *= *)15(,?)/\1120\2/' "$DAEMON_FILE"
+        echo "[$(date)] ✏️ timeout patched in $DAEMON_FILE"
       else
         echo "[$(date)] ❌ p2p_daemon.py не найден"
       fi
@@ -62,7 +78,17 @@ while true; do
       break
     fi
 
+    # Проверка остальных ключевых ошибок
     for ERR in "${KEYWORDS[@]}"; do
       if grep -q "$ERR" "$TMP_LOG"; then
         echo "[$(date)] ❌ Найдена ошибка '$ERR'. Перезапуск..."
         kill -9 "$PID" 2>/dev/null
+        sleep 3
+        break 2
+      fi
+    done
+  done
+
+  echo "[$(date)] 🔁 Повтор через 3 секунды..."
+  sleep 3
+done
