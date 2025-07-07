@@ -20,7 +20,7 @@ KEYWORDS=(
 P2P_ERROR_MSG="P2PDaemonError('Daemon failed to start in 15.0 seconds')"
 
 while true; do
-  echo "[$(date)] 🔧 Закомментируем удаление JSON..."
+  echo "[$(date)] 🔧 Патчим run_rl_swarm.sh (удаление JSON)..."
   sed -i '/modal-login\/temp-data\/.*\.json/ s/^/#/' "$SCRIPT"
 
   echo "[$(date)] 🚀 Запуск Gensyn-ноды..."
@@ -39,7 +39,7 @@ while true; do
       idle_time=$((now - current_mod))
 
       if (( idle_time > MAX_IDLE )); then
-        echo "[$(date)] ⚠️ Лог не обновлялся более $((MAX_IDLE/60)) минут. Перезапуск..."
+        echo "[$(date)] ⚠️ Лог не обновлялся $((MAX_IDLE/60)) мин. Перезапуск..."
         kill -9 "$PID" 2>/dev/null
         sleep 3
         break
@@ -47,15 +47,15 @@ while true; do
     fi
 
     if grep -q "$P2P_ERROR_MSG" "$TMP_LOG"; then
-      echo "[$(date)] 🛠 Обнаружена ошибка P2P-демона. Ищем p2p_daemon.py..."
+      echo "[$(date)] 🛠 Обнаружена ошибка P2P-демона. Патчим startup_timeout..."
 
       DAEMON_FILE=$(find ~/rl-swarm/.venv -type f -path "*/site-packages/hivemind/p2p/p2p_daemon.py" 2>/dev/null | head -n 1)
 
       if [[ -n "$DAEMON_FILE" ]]; then
-        echo "[$(date)] ✏️ Патчим: $DAEMON_FILE"
-        sed -i 's/startup_timeout: float = *15/startup_timeout: float = 120/' "$DAEMON_FILE"
+        echo "[$(date)] ✏️ Патчим файл: $DAEMON_FILE"
+        sed -i -E 's/(startup_timeout: *float *= *)15(,?)/\1120\2/' "$DAEMON_FILE"
       else
-        echo "[$(date)] ❌ Не найден p2p_daemon.py. Пропускаем правку..."
+        echo "[$(date)] ❌ p2p_daemon.py не найден"
       fi
 
       kill -9 "$PID" 2>/dev/null
@@ -65,7 +65,7 @@ while true; do
 
     for ERR in "${KEYWORDS[@]}"; do
       if grep -q "$ERR" "$TMP_LOG"; then
-        echo "[$(date)] ❌ Найдено '$ERR'. Перезапуск..."
+        echo "[$(date)] ❌ Найдена ошибка '$ERR'. Перезапуск..."
         kill -9 "$PID" 2>/dev/null
         sleep 3
         break 2
@@ -73,6 +73,6 @@ while true; do
     done
   done
 
-  echo "[$(date)] 🔁 Процесс завершён. Перезапуск через 3 секунды..."
+  echo "[$(date)] 🔁 Перезапуск через 3 секунды..."
   sleep 3
 done
