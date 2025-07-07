@@ -20,16 +20,16 @@ KEYWORDS=(
 P2P_ERROR_MSG="P2PDaemonError('Daemon failed to start in 15.0 seconds')"
 
 while true; do
-  echo "[$(date)] 🔧 Патчим run_rl_swarm.sh (удаление JSON)..."
-  sed -i '/modal-login\/temp-data\/.*\.json/ s/^/#/' "$SCRIPT"
+  echo "[$(date)] 🔧 Отключаем удаление JSON..."
+  # Вариант: комментируем rm через true&& (без нарушения структуры)
+  sed -i '/modal-login\/temp-data\/.*\.json/ s#rm -r#true \&\& rm -r#' "$SCRIPT"
 
-  echo "[$(date)] 🚀 Запуск Gensyn-ноды..."
+  echo "[$(date)] 🚀 Запускаем Gensyn-ноду..."
 
   rm -f "$TMP_LOG"
   ( sleep 1 && printf "n\n\n\n" ) | bash "$SCRIPT" 2>&1 | tee "$TMP_LOG" &
   PID=$!
 
-  last_mod=$(date +%s)
   while kill -0 "$PID" 2>/dev/null; do
     sleep 5
 
@@ -39,7 +39,7 @@ while true; do
       idle_time=$((now - current_mod))
 
       if (( idle_time > MAX_IDLE )); then
-        echo "[$(date)] ⚠️ Лог не обновлялся $((MAX_IDLE/60)) мин. Перезапуск..."
+        echo "[$(date)] ⚠️ Лог не обновлялся более $((MAX_IDLE/60)) минут. Перезапуск..."
         kill -9 "$PID" 2>/dev/null
         sleep 3
         break
@@ -55,7 +55,7 @@ while true; do
         echo "[$(date)] ✏️ Патчим файл: $DAEMON_FILE"
         sed -i -E 's/(startup_timeout: *float *= *)15(,?)/\1120\2/' "$DAEMON_FILE"
       else
-        echo "[$(date)] ❌ p2p_daemon.py не найден"
+        echo "[$(date)] ❌ Не найден p2p_daemon.py"
       fi
 
       kill -9 "$PID" 2>/dev/null
