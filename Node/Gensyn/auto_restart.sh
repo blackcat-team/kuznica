@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT="/root/rl-swarm/run_rl_swarm.sh"
-TMP_LOG="/tmp/rlswarm_stdout.log"
+TMP_LOG="/tmp/rls­warm_stdout.log"
 MAX_IDLE=600  # 10 минут
 
 KEYWORDS=(
@@ -20,15 +20,9 @@ KEYWORDS=(
 P2P_ERROR_MSG="P2PDaemonError('Daemon failed to start in 15.0 seconds')"
 
 while true; do
-  echo "[$(date)] 🔧 Отключаем удаление JSON через if false..."
-
-  # Найдём строку с удалением JSON и обернём её в if false; then ... fi
-  # Чтобы не ломать синтаксис скрипта, заменяем строку на 3 строки блока
-  sed -i '/modal-login\/temp-data\/.*\.json/{
-    s/.*/if false; then\
-&\
-fi/
-  }' "$SCRIPT"
+  echo "[$(date)] 🔧 Отключаем удаление JSON (замена на пустышку)..."
+  # Заменяем строку rm ... на ":" — no-op, синтаксис остается целым
+  sed -i '/modal-login\/temp-data\/.*\.json/ s#.*#:#' "$SCRIPT"
 
   echo "[$(date)] 🚀 Запускаем Gensyn-ноду..."
 
@@ -45,7 +39,7 @@ fi/
       idle_time=$((now - current_mod))
 
       if (( idle_time > MAX_IDLE )); then
-        echo "[$(date)] ⚠️ Лог не обновлялся более $((MAX_IDLE/60)) минут. Перезапуск..."
+        echo "[$(date)] ⚠️ Лог не менялся $((MAX_IDLE/60)) мин. Перезапуск..."
         kill -9 "$PID" 2>/dev/null
         sleep 3
         break
@@ -53,15 +47,14 @@ fi/
     fi
 
     if grep -q "$P2P_ERROR_MSG" "$TMP_LOG"; then
-      echo "[$(date)] 🛠 Обнаружена ошибка P2P-демона. Патчим startup_timeout..."
+      echo "[$(date)] 🛠 P2PDaemonError — патчим startup_timeout..."
 
-      DAEMON_FILE=$(find ~/rl-swarm/.venv -type f -path "*/site-packages/hivemind/p2p/p2p_daemon.py" 2>/dev/null | head -n 1)
-
+      DAEMON_FILE=$(find ~/rl-swarm/.venv -type f -path "*/site-packages/hivemind/p2p/p2p_daemon.py" 2>/dev/null | head -n1)
       if [[ -n "$DAEMON_FILE" ]]; then
         echo "[$(date)] ✏️ Патчим файл: $DAEMON_FILE"
         sed -i -E 's/(startup_timeout: *float *= *)15(,?)/\1120\2/' "$DAEMON_FILE"
       else
-        echo "[$(date)] ❌ Не найден p2p_daemon.py"
+        echo "[$(date)] ❌ p2p_daemon.py не найден"
       fi
 
       kill -9 "$PID" 2>/dev/null
@@ -73,12 +66,3 @@ fi/
       if grep -q "$ERR" "$TMP_LOG"; then
         echo "[$(date)] ❌ Найдена ошибка '$ERR'. Перезапуск..."
         kill -9 "$PID" 2>/dev/null
-        sleep 3
-        break 2
-      fi
-    done
-  done
-
-  echo "[$(date)] 🔁 Перезапуск через 3 секунды..."
-  sleep 3
-done
