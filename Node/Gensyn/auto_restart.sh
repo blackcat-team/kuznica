@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT="./run_rl_swarm.sh"
+SCRIPT="/root/rl-swarm/run_rl_swarm.sh"
 TMP_LOG="/tmp/rlswarm_stdout.log"
 MAX_IDLE=600  # 10 минут
 
@@ -20,8 +20,8 @@ KEYWORDS=(
 P2P_ERROR_MSG="P2PDaemonError('Daemon failed to start in 15.0 seconds')"
 
 while true; do
-  echo "[$(date)] 🔧 Вносим правку в run_rl_swarm.sh..."
-  sed -i 's#rm -r \$ROOT_DIR/modal-login/temp-data/\*.json 2> /dev/null || true#\#rm -r $ROOT_DIR/modal-login/temp-data/*.json 2> /dev/null || true#' /root/rl-swarm/run_rl_swarm.sh
+  echo "[$(date)] 🔧 Закомментируем удаление JSON..."
+  sed -i '/modal-login\/temp-data\/.*\.json/ s/^/#/' "$SCRIPT"
 
   echo "[$(date)] 🚀 Запуск Gensyn-ноды..."
 
@@ -47,15 +47,15 @@ while true; do
     fi
 
     if grep -q "$P2P_ERROR_MSG" "$TMP_LOG"; then
-      echo "[$(date)] 🛠 Обнаружена ошибка P2P-демона. Ищем p2p_daemon.py для патча..."
+      echo "[$(date)] 🛠 Обнаружена ошибка P2P-демона. Ищем p2p_daemon.py..."
 
       DAEMON_FILE=$(find ~/rl-swarm/.venv -type f -path "*/site-packages/hivemind/p2p/p2p_daemon.py" 2>/dev/null | head -n 1)
 
       if [[ -n "$DAEMON_FILE" ]]; then
-        echo "[$(date)] ✏️ Патчим файл: $DAEMON_FILE"
+        echo "[$(date)] ✏️ Патчим: $DAEMON_FILE"
         sed -i 's/startup_timeout: float = *15/startup_timeout: float = 120/' "$DAEMON_FILE"
       else
-        echo "[$(date)] ❌ Не найден p2p_daemon.py. Проверь виртуальное окружение."
+        echo "[$(date)] ❌ Не найден p2p_daemon.py. Пропускаем правку..."
       fi
 
       kill -9 "$PID" 2>/dev/null
