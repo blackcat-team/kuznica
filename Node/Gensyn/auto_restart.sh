@@ -1,17 +1,27 @@
 #!/bin/bash
 
+# 0) Определяем путь до rl-swarm
+if [ -d "/root/rl-swarm" ]; then
+  RL_DIR="/root/rl-swarm"
+elif [ -d "/workspace/rl-swarm" ]; then
+  RL_DIR="/workspace/rl-swarm"
+else
+  echo "❌ Не найден rl-swarm ни в /root, ни в /workspace"
+  exit 1
+fi
+
 # 1) Подготовка "подменного" rm
-FAKEBIN="/root/rl-swarm/fakebin"
+FAKEBIN="$RL_DIR/fakebin"
 mkdir -p "$FAKEBIN"
 
-cat > "$FAKEBIN/rm" << 'EOF'
+cat > "$FAKEBIN/rm" << EOF
 #!/bin/bash
 # Если rm вызывается именно для modal-login/temp-data/*.json — ничего не делаем
-if [[ "$1" == "-r" && "$2" == "$ROOT_DIR/modal-login/temp-data/"* ]]; then
+if [[ "\$1" == "-r" && "\$2" == "$RL_DIR/modal-login/temp-data/"* ]]; then
   exit 0
 else
   # Иначе — настоящий rm
-  exec /bin/rm "$@"
+  exec /bin/rm "\$@"
 fi
 EOF
 
@@ -19,7 +29,7 @@ chmod +x "$FAKEBIN/rm"
 # Добавляем в PATH вперед системного
 export PATH="$FAKEBIN:$PATH"
 
-SCRIPT="/root/rl-swarm/run_rl_swarm.sh"
+SCRIPT="$RL_DIR/run_rl_swarm.sh"
 TMP_LOG="/tmp/rlswarm_stdout.log"
 MAX_IDLE=600  # 10 минут
 
@@ -65,7 +75,7 @@ while true; do
     if grep -q "$P2P_ERROR_MSG" "$TMP_LOG"; then
       echo "[$(date)] 🛠 P2PDaemonError — патчим startup_timeout..."
 
-      DAEMON_FILE=$(find ~/rl-swarm/.venv -type f -path "*/site-packages/hivemind/p2p/p2p_daemon.py" | head -n1)
+      DAEMON_FILE=$(find "$RL_DIR/.venv" -type f -path "*/site-packages/hivemind/p2p/p2p_daemon.py" | head -n1)
       if [[ -n "$DAEMON_FILE" ]]; then
         sed -i -E 's/(startup_timeout: *float *= *)15(,?)/\1120\2/' "$DAEMON_FILE"
         echo "[$(date)] ✏️ timeout patched in $DAEMON_FILE"
